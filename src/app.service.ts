@@ -6,11 +6,7 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
   constructor(@Inject("kafka-client") private readonly client: ClientKafka) { }
 
   async onModuleInit() {
-    [
-      'NEW_ORDER',
-      'TAKE_ORDER',
-      'COMPLETE_ORDER'
-    ].forEach((key) => this.client.subscribeToResponseOf(`${key}`));
+    ['template.topic'].forEach((key) => this.client.subscribeToResponseOf(`${key}`));
     await this.client.connect();
   }
 
@@ -20,6 +16,10 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
 
   getHello(): string {
     return 'Hello World!';
+  }
+
+  send_message() {
+    return this.client.emit('template.topic', {foo:'bar', data: new Date().toString()})
   }
 
 }
